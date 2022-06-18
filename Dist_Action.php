@@ -2,8 +2,6 @@
 include 'connection.php';
 $dist_name = $_POST['dist'];
 $Remarks = $_POST['Remarks'];
-//echo $dist_;
-//echo $Remarks;
 
 $sql = "INSERT INTO dist_master (Dist_Name, Remarks ) VALUES ('$dist_name', '$Remarks')";
 

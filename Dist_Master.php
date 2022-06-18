@@ -21,15 +21,15 @@
     <center>
         <h1 class="heading">District Master Entry form</h1>
     </center>
-    <form action="Dist_Action.php" method="post">
+    <form action="Dist_Action.php" method="post" name="Form" onsubmit="return validate()">
         <table align="center">
             <tr>
                 <td>Enter District</td>
-                <td><input type="text" name="dist"><br><br></td>
+                <td><input type="text" name="dist" id="dist"><br><br></td>
             </tr>
             <tr>
                 <td>Remarks</td>
-                <td><textarea name="Remarks" id="" rows="4"></textarea></td>
+                <td><textarea name="Remarks" id="" rows="4" id="remark"></textarea></td>
             </tr>
             <tr>
                 <td align="center"><button type="submit"> submit </button></td>
@@ -62,5 +62,17 @@
         }
         mysqli_close($conn); //Make sure to close out the database connection
         ?>
+        <script>
+            function validate(){
+                let dist = document.forms["Form"]["dist"].value
+                let rem = document.forms["Form"]["Remarks"].value
+                if(dist == "" || rem ==""){
+                    alert("fields can't be empty")
+                    return false
+                }else{
+                    return true
+                }
+            }
+        </script>
 </body>
 </html>
