@@ -15,7 +15,7 @@ include('menu.php');
 </head>
 <body>
     <div class="container" style="height:100vh; overflow:auto; width:70%; margin:auto" >
-        <table align="center" class="table table-striped table-bordered" >
+        <table align="center" class="table table-striped table-bordered">
             <tr>
                 <th>Name</th>
                 <th>FName</th>
