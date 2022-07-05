@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>create dynamic multilevel menu using php and mysql</title>
+    <title>Electoral System</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -30,7 +30,7 @@
 
         /*main side bar*/
         .msb {
-            width: 200px;
+            width: 200px; 
             background-color: #f5f7f9;
             position: fixed;
             left: 0;
@@ -92,11 +92,6 @@
             padding: 0;
             list-style: none;
         }
-
-        .nv {
-            /*ns: nav-sub*/
-        }
-
         .nv li {
             display: block;
             position: relative;
@@ -168,7 +163,7 @@
 
 <body>
     <?php
-    include 'database.php';
+    include("connection.php");
     //$con=mysqli_connect("localhost","root","123","exam");
     // Check connection
     if (mysqli_connect_errno()) {
@@ -191,40 +186,70 @@
 
     //     return $menu;
     //   }
+
+    function check_child($id){
+        global $conn;
+        $sqlChild = "Select * from menu where parent_id =". $id;
+        $result = mysqli_query($conn, $sqlChild);
+        return $result;
+    }
+
+
+
+
+    function menu(){
+        global $conn;
+        $menuStr = "";
+        $sql = "Select * from menu where parent_id = 0";
+        $res = mysqli_query($conn, $sql);
+        while($row = $res->fetch_assoc()){
+            $child = check_child($row['menu_id']);
+            if($child->num_rows >0){
+                $menuStr .= "<li class='panel panel-default' id='dropdown'><a data-toggle='collapse' href='#dropdown-lvl".$row['menu_id']."'><i class='".$row['icon']."'></i>".$row['menu_name']."<span class='caret'></span></a><!-- Dropdown level 1 --><div id='dropdown-lvl".$row['menu_id']."' class='panel-collapse collapse'><div class='panel-body'><ul class='nav navbar-nav'>";
+                while($childRow = $child->fetch_assoc()){
+                    // var_dump($child);
+                    $menuStr .= "<li><a href='".$childRow['link']."'>". $childRow['menu_name']."</a></li>";
+                }
+                $menuStr .= "</ul></div></div></li>";
+            }else{
+                $menuStr.= "<li><a href='".$row['link']."'><i class='". $row['icon']."'></i>". $row['menu_name']."</a></li>";
+            }
+        }
+        return $menuStr;
+    }
     ?>
 
 
     <!--msb: main sidebar-->
     <div class="msb" id="msb">
         <nav class="navbar navbar-default" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <div class="brand-wrapper">
                     <!-- Brand -->
                     <div class="brand-name-wrapper">
                         <h3>MENU</h3>
-
                     </div>
-
                 </div>
-
             </div>
+
+
 
             <!-- Main Menu -->
             <div class="side-menu-container">
                 <ul class="nav navbar-nav">
-
-                    <li><a href="#"><i class="fa-solid fa-house"></i> Home</a></li>
+                    <?php echo menu();?>
+<!-- 
+                    <li><a href="./menu.php"><i class="fa-solid fa-house"></i> Home</a></li>
                     <li class="active"><a href="#"><i class="fa fa-puzzle-piece"></i> Components</a></li>
                     <li><a href="#"><i class="fa fa-heart"></i> Extras</a></li>
 
-                    <!-- Dropdown-->
+
                     <li class="panel panel-default" id="dropdown">
                         <a data-toggle="collapse" href="#dropdown-lvl1">
                             <i class="fa fa-diamond"></i> Apps
                             <span class="caret"></span>
                         </a>
-                        <!-- Dropdown level 1 -->
+
                         <div id="dropdown-lvl1" class="panel-collapse collapse">
                             <div class="panel-body">
                                 <ul class="nav navbar-nav">
@@ -233,27 +258,10 @@
                                     <li><a href="#">Ecommerce</a></li>
                                     <li><a href="#">User</a></li>
                                     <li><a href="#">Social</a></li>
-
-                                    <!-- Dropdown level 2 -->
-                                    <li class="panel panel-default" id="dropdown">
-                                        <a data-toggle="collapse" href="#dropdown-lvl2">
-                                            <i class="glyphicon glyphicon-off"></i> Sub Level <span class="caret"></span>
-                                        </a>
-                                        <div id="dropdown-lvl2" class="panel-collapse collapse">
-                                            <div class="panel-body">
-                                                <ul class="nav navbar-nav">
-                                                    <li><a href="#">Link</a></li>
-                                                    <li><a href="#">Link</a></li>
-                                                    <li><a href="#">Link</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
-                    </li>
-                    <li><a href="#"><span class="glyphicon glyphicon-signal"></span> Link</a></li>
+                    </li> -->
                 </ul>
             </div><!-- /.navbar-collapse -->
         </nav>
